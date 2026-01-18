@@ -50,7 +50,7 @@ export default function ArticleGrid({ category }: Props) {
         justifyContent: "flex-end",
       }}
     >
-      <div style={{ width: "100%", maxWidth: 1100, marginLeft: "auto" }}>
+      <div style={{ width: "100%", maxWidth: 1100, marginInline: "auto" }}>
         <header style={{ marginBottom: "clamp(24px, 6vw, 32px)", textAlign: "left" }}>
           <p
             style={{
