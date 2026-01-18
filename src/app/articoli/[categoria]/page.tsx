@@ -1,17 +1,15 @@
+"use client";
+
 import { useParams } from "next/navigation";
+import ArticleGrid from "@/app/components/ArticleGrid";
+import { categoryLabels } from "@/data/articles";
 
 export default function CategoriaArticoli() {
   const params = useParams();
-  return (
-    <main style={{ padding: 32 }}>
-      <h1>Categoria: {params.categoria}</h1>
-      <p>Qui appariranno gli articoli di questa categoria.</p>
-    </main>
-  );
+  const categoryParam = typeof params.categoria === "string" ? params.categoria : "cultura";
+
+  // fallback se categoria non esiste nelle etichette
+  const category = categoryLabels[categoryParam] ? categoryParam : "cultura";
+
+  return <ArticleGrid category={category} />;
 }
-
-
-
-
-
-

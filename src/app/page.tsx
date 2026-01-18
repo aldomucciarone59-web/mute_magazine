@@ -1,15 +1,36 @@
+import { ArticleCard } from "@/data/articles";
 import Image from "next/image";
 import Link from "next/link";
+import { headers } from "next/headers";
 
 const papere = [
   { slug: "cultura", label: "Cultura", image: "/papera_cultura.png" },
-  { slug: "societa", label: "Società", image: "/Papera_società.png" },
-  { slug: "riflessioni", label: "Riflessioni", image: "/Papera_riflessioni.png" },
-  { slug: "curiosita", label: "Curiosità", image: "/papera_curiosità.png" },
+  { slug: "societa", label: "Società", image: "/papera_societa.png" },
+  { slug: "riflessioni", label: "Riflessioni", image: "/papera_riflessioni.png" },
+  { slug: "curiosita", label: "Curiosità", image: "/papera_curiosita.png" },
 ];
-const manifestoText = `Caratteristica principale è data dal fatto che offre una distribuzione delle lettere uniforme, apparendo come un normale blocco di testo leggibile. Fu reso popolare, negli anni '60, con la diffusione dei fogli di caramenteo dei L'uso di questo espediente di riempire spazi altrimenti vuoti (spesso in attesa dei dati definitivi), è molto efficace grazie soprattutto all'alternanza di parole lunghe e brevi, punteggiatura e paragrafi. In questo modo viene simulato con sufficiente verosimiglianza l'impatto grafico di un testo reale, in modo particolare per quanto riguarda l'impatto estetico.`;
 
-export default function Home() {
+async function getManifesto(): Promise<ArticleCard | null> {
+  try {
+    const h = await headers();   // 👈 QUESTO È IL FIX
+    const host = h.get("host");
+
+    if (!host) return null;
+
+    const res = await fetch(`http://${host}/api/articles/manifesto`, {
+      cache: "no-store",
+    });
+
+    if (!res.ok) return null;
+    return res.json();
+  } catch (err) {
+    console.error("Manifesto fetch error:", err);
+    return null;
+  }
+}
+
+export default async function Home() {
+  const manifesto = await getManifesto();
   return (
     <main style={{ background: "#fff" }}>
       <section
@@ -53,7 +74,7 @@ export default function Home() {
               >
                 <Image
                   src={papera.image}
-                  alt={`Papera ${papera.label}`}
+                  alt={`papera ${papera.label}`}
                   fill
                   sizes="(max-width: 600px) 25vw, 25vw"
                   style={{ objectFit: "contain" }}
@@ -102,8 +123,8 @@ export default function Home() {
           <div className="manifesto__title">Manifesto</div>
           <div className="manifesto__marquee">
             <div className="manifesto__marquee-inner">
-              <p>{manifestoText}</p>
-              <p>{manifestoText}</p>
+              <p>{manifesto?.content ?? "Manifesto non disponibile"}</p>
+              <p>{manifesto?.content ?? "Manifesto non disponibile"}</p>
             </div>
           </div>
         </div>
