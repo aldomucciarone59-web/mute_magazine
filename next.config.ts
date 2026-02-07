@@ -3,6 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
+  reactStrictMode: true,
+
   images: {
     remotePatterns: [
       {
@@ -14,7 +16,10 @@ const nextConfig: NextConfig = {
         hostname: "picsum.photos",
       },
     ],
+        domains: ["res.cloudinary.com"], //Add external domains here
   },
 };
+
+module.exports = nextConfig;
 
 export default nextConfig;

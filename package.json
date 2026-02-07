@@ -9,10 +9,16 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@editorjs/editorjs": "^2.31.1",
+    "@editorjs/header": "^2.8.8",
+    "@editorjs/image": "^2.10.3",
+    "@editorjs/list": "^2.0.9",
+    "@editorjs/paragraph": "^2.11.7",
     "mongodb": "^7.0.0",
-    "next": "16.0.7",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
+    "next": "^16.1.6",
+    "next-cloudinary": "^6.17.5",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
