@@ -53,6 +53,9 @@ function Block({ block }: { block: { type: string; data: any } }) {
         case "list":
             return <ListBlock data={block.data} />;
 
+        case "checklist":
+            return <ChecklistBlock data={block.data} />;
+
         case "image":
             return <ImageBlock data={block.data} />;
 
@@ -110,7 +113,7 @@ function ParagraphBlock({ data }: { data: { text: string } }) {
     );
 }
 
-function ListBlock({ data }: { data: { style: "ordered" | "unordered"; items: string[] } }) {
+function ListBlock({ data }: { data: { style: "ordered" | "unordered"; items: any[] } }) {
     const Tag = data.style === "ordered" ? "ol" : "ul";
 
     return (
@@ -124,18 +127,71 @@ function ListBlock({ data }: { data: { style: "ordered" | "unordered"; items: st
                 overflowWrap: "break-word",
             }}
         >
+            {data.items.map((item, i) => {
+                // Gestisce sia stringhe che oggetti con proprietà 'content' o 'text'
+                const content = typeof item === 'string'
+                    ? item
+                    : (item.content || item.text || JSON.stringify(item));
+
+                return (
+                    <li
+                        key={i}
+                        style={{
+                            marginBottom: 8,
+                            wordWrap: "break-word",
+                            overflowWrap: "break-word",
+                        }}
+                        dangerouslySetInnerHTML={{ __html: content }}
+                    />
+                );
+            })}
+        </Tag>
+    );
+}
+
+function ChecklistBlock({ data }: { data: { items: Array<{ text: string; checked: boolean }> } }) {
+    return (
+        <div
+            style={{
+                fontSize: "clamp(15px, 4vw, 18px)",
+                lineHeight: 1.7,
+                marginBottom: "clamp(16px, 4vw, 20px)",
+                wordWrap: "break-word",
+                overflowWrap: "break-word",
+            }}
+        >
             {data.items.map((item, i) => (
-                <li
+                <div
                     key={i}
                     style={{
+                        display: "flex",
+                        alignItems: "flex-start",
                         marginBottom: 8,
-                        wordWrap: "break-word",
-                        overflowWrap: "break-word",
+                        gap: 10,
                     }}
-                    dangerouslySetInnerHTML={{ __html: item }}
-                />
+                >
+                    <input
+                        type="checkbox"
+                        checked={item.checked}
+                        readOnly
+                        style={{
+                            marginTop: 4,
+                            cursor: "default",
+                            flexShrink: 0,
+                        }}
+                    />
+                    <span
+                        style={{
+                            textDecoration: item.checked ? "line-through" : "none",
+                            color: item.checked ? "#999" : "#333",
+                            wordWrap: "break-word",
+                            overflowWrap: "break-word",
+                        }}
+                        dangerouslySetInnerHTML={{ __html: item.text }}
+                    />
+                </div>
             ))}
-        </Tag>
+        </div>
     );
 }
 

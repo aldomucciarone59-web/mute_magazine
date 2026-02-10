@@ -55,9 +55,6 @@ export default function ArticoloDettaglio() {
     );
   }
 
-  // Determina se il cover è video o immagine
-  const isVideoCover = article.cover?.includes("video") || article.cover?.endsWith(".mp4");
-
   return (
     <main
       style={{
@@ -112,6 +109,7 @@ export default function ArticoloDettaglio() {
               gap: "clamp(16px, 4vw, 24px)",
               fontSize: "clamp(13px, 3.5vw, 15px)",
               color: "#666",
+              flexWrap: "wrap",
             }}
           >
             <span>
@@ -128,7 +126,7 @@ export default function ArticoloDettaglio() {
           </div>
         </header>
 
-        {/* Cover Media */}
+        {/* Cover Image */}
         {article.cover && (
           <div
             style={{
@@ -140,26 +138,14 @@ export default function ArticoloDettaglio() {
               overflow: "hidden",
             }}
           >
-            {isVideoCover ? (
-              <video
-                src={article.cover}
-                controls
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                }}
-              />
-            ) : (
-              <Image
-                src={article.cover}
-                alt={article.title}
-                fill
-                sizes="(max-width: 768px) 100vw, 840px"
-                style={{ objectFit: "cover" }}
-                priority
-              />
-            )}
+            <Image
+              src={article.cover}
+              alt={article.title}
+              fill
+              sizes="(max-width: 768px) 100vw, 840px"
+              style={{ objectFit: "cover" }}
+              priority
+            />
           </div>
         )}
 

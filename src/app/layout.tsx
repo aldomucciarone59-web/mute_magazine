@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
-// Rimuovi Geist (non funziona su Next.js 13)
-// Usa solo il font locale
+// Rimosso Geist (non funziona su Next.js 13)
+// Usato solo il font locale
 const mattone = localFont({
   src: "../../public/Mattone-150.otf",
   variable: "--font-mattone",
   display: "swap",
 });
 
-// Fallback system font
 const systemFont = localFont({
   src: [
     {
@@ -35,10 +35,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="it">
       <body className={`${mattone.variable} ${systemFont.variable}`}>
         <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   );

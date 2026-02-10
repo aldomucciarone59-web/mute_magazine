@@ -6,7 +6,6 @@ import { ArticleCard, categoryLabels } from "@/data/articles";
 import Editor, { deleteCloudinaryMedia } from "@/app/components/Editor";
 
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
-const MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50MB
 
 export default function AdminEdit() {
     const { id } = useParams();
@@ -51,7 +50,6 @@ export default function AdminEdit() {
                         console.log("📝 Content parsed:", parsed);
 
                         setContent(parsed);
-                        // Incrementa editorKey per forzare re-mount
                         setEditorKey(prev => prev + 1);
                     } catch (e) {
                         console.error("Error parsing content:", e);
@@ -77,13 +75,16 @@ export default function AdminEdit() {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Validazione dimensione
-        const isVideo = file.type.startsWith("video/");
-        const maxSize = isVideo ? MAX_VIDEO_SIZE : MAX_IMAGE_SIZE;
+        // Validazione tipo file
+        if (!file.type.startsWith("image/")) {
+            alert("Solo immagini e GIF sono supportate per la copertina.");
+            e.target.value = "";
+            return;
+        }
 
-        if (file.size > maxSize) {
-            const sizeMB = (maxSize / 1024 / 1024).toFixed(0);
-            alert(`Il file è troppo grande. Max ${sizeMB}MB per ${isVideo ? "video" : "immagini"}.`);
+        // Validazione dimensione
+        if (file.size > MAX_IMAGE_SIZE) {
+            alert(`Il file è troppo grande. Max 10MB per le copertine.`);
             e.target.value = "";
             return;
         }
@@ -205,7 +206,6 @@ export default function AdminEdit() {
     }
 
     const currentCoverUrl = newCoverUrl || oldCoverUrl;
-    const isVideoCover = currentCoverUrl?.includes("/video/") || currentCoverUrl?.endsWith(".mp4");
 
     return (
         <main
@@ -278,35 +278,23 @@ export default function AdminEdit() {
                             <p style={{ fontSize: 13, color: "#666", marginBottom: 4 }}>
                                 Copertina attuale:
                             </p>
-                            {isVideoCover ? (
-                                <video
-                                    src={currentCoverUrl}
-                                    controls
-                                    style={{
-                                        width: "100%",
-                                        maxHeight: 200,
-                                        borderRadius: 6,
-                                    }}
-                                />
-                            ) : (
-                                <img
-                                    src={currentCoverUrl}
-                                    alt="Current cover"
-                                    style={{
-                                        width: "100%",
-                                        maxHeight: 200,
-                                        objectFit: "cover",
-                                        borderRadius: 6,
-                                    }}
-                                />
-                            )}
+                            <img
+                                src={currentCoverUrl}
+                                alt="Current cover"
+                                style={{
+                                    width: "100%",
+                                    maxHeight: 200,
+                                    objectFit: "cover",
+                                    borderRadius: 6,
+                                }}
+                            />
                         </div>
                     )}
 
                     {!coverPreview && (
                         <input
                             type="file"
-                            accept="image/*,.gif"
+                            accept="image/*"
                             onChange={handleCoverChange}
                             disabled={uploadingCover}
                             style={inputStyle}
@@ -326,28 +314,16 @@ export default function AdminEdit() {
                             <p style={{ fontSize: 13, color: "#666", marginBottom: 4 }}>
                                 Nuova copertina:
                             </p>
-                            {coverFile?.type.startsWith("video/") ? (
-                                <video
-                                    src={coverPreview}
-                                    controls
-                                    style={{
-                                        width: "100%",
-                                        maxHeight: 200,
-                                        borderRadius: 6,
-                                    }}
-                                />
-                            ) : (
-                                <img
-                                    src={coverPreview}
-                                    alt="New preview"
-                                    style={{
-                                        width: "100%",
-                                        maxHeight: 200,
-                                        objectFit: "cover",
-                                        borderRadius: 6,
-                                    }}
-                                />
-                            )}
+                            <img
+                                src={coverPreview}
+                                alt="New preview"
+                                style={{
+                                    width: "100%",
+                                    maxHeight: 200,
+                                    objectFit: "cover",
+                                    borderRadius: 6,
+                                }}
+                            />
                             <button
                                 type="button"
                                 onClick={handleRemoveNewCover}
