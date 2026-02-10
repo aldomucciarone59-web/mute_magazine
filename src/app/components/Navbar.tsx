@@ -243,7 +243,7 @@ export default function Navbar() {
       <div style={{ flex: '0 0 auto', display: "flex", justifyContent: "center", alignItems: "center" }}>
         <Link href="/" style={{ display: "flex", alignItems: "center" }}>
           <Image
-            src="/mute_logo_prova.png"
+            src="/LOGO-MU_TE-BIANCO.png"
             alt="Mute magazine logo"
             width={55}
             height={40}
